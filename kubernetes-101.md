@@ -22,9 +22,9 @@ section {
   font-weight: 300;
   box-sizing: border-box;
   position: relative;
-  line-height: 1.8;
-  font-size: 24px;
-  padding: 60px 80px;
+  line-height: 1.5;
+  font-size: 20px;
+  padding: 32px 52px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -43,8 +43,8 @@ h1 {
 }
 
 h2 {
-  font-size: 42px;
-  margin-bottom: 40px;
+  font-size: 34px;
+  margin-bottom: 16px;
   font-weight: 400;
   letter-spacing: 0.01em;
 }
@@ -62,17 +62,17 @@ ul, ol {
 }
 
 li {
-  margin-bottom: 14px;
-  line-height: 1.7;
+  margin-bottom: 6px;
+  line-height: 1.5;
 }
 
 footer {
-  font-size: 14px;
+  font-size: 13px;
   color: #999999;
   position: absolute;
-  left: 80px;
-  right: 80px;
-  bottom: 40px;
+  left: 56px;
+  right: 56px;
+  bottom: 20px;
   text-align: center;
 }
 
@@ -129,9 +129,6 @@ A beginner's guide to container orchestration
 
 ## Agenda
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px;">
-<div>
-
 - The Problem
 - What is Kubernetes?
 - Cluster Structure
@@ -139,8 +136,9 @@ A beginner's guide to container orchestration
 - Pods
 - ReplicaSets
 
-</div>
-<div>
+---
+
+## Agenda (cont.)
 
 - Deployments
 - Services & Networking
@@ -148,9 +146,6 @@ A beginner's guide to container orchestration
 - Ingress
 - Persistent Volumes
 - Summary
-
-</div>
-</div>
 
 ---
 
@@ -163,6 +158,8 @@ A beginner's guide to container orchestration
 ---
 
 ## Life Without Kubernetes
+
+![bg right:45% contain](assets/life-without-kube.jpg)
 
 Imagine you run a web app on a single server.
 
@@ -177,12 +174,12 @@ Imagine you run a web app on a single server.
 
 ## What We Really Want
 
-- **High availability** — app stays up even if a server dies
-- **Auto-scaling** — handle traffic spikes automatically
-- **Easy updates** — deploy new versions without downtime
-- **Self-healing** — crashed processes restart themselves
+![bg right:45% contain](assets/benefits-of-kubernetes.jpeg)
 
-This is exactly what Kubernetes gives you.
+- **High availability** — stays up even if a server dies
+- **Auto-scaling** — handles traffic spikes automatically
+- **Easy updates** — no downtime on deploys
+- **Self-healing** — crashed processes restart themselves
 
 ---
 
@@ -196,13 +193,13 @@ This is exactly what Kubernetes gives you.
 
 ## Kubernetes in Plain English
 
-Kubernetes (also called **k8s**) is a system that manages where and how your containers run across a group of machines.
+![bg right:45% contain](assets/kubernetes-vs-docker.png)
 
-- You describe **what** you want ("run 3 copies of my app")
+Kubernetes (**k8s**) manages where and how your containers run across many machines.
+
+- You describe **what** you want
 - Kubernetes figures out **how** to make it happen
-- It keeps watching and fixes things when they drift
-
-> You write the goal. Kubernetes does the work.
+- It keeps watching and self-heals
 
 ---
 
@@ -217,6 +214,8 @@ Think of Kubernetes like a **restaurant manager**:
 ---
 
 ## Key Terms to Know
+
+![bg right:45% contain](assets/keyterm.webp)
 
 | Term | Plain meaning |
 |------|--------------|
@@ -250,6 +249,8 @@ A production cluster usually has multiple worker nodes for redundancy.
 
 ## The Control Plane
 
+![bg right:45% contain](assets/control-plane.jpg)
+
 The control plane is the "brain" of Kubernetes.
 
 - Keeps track of what is running where
@@ -263,6 +264,8 @@ You do not run your apps on the control plane — it is reserved for management.
 
 ## Worker Nodes
 
+![bg right:45% contain](assets/worker-node.png)
+
 Worker nodes are the machines that actually run your containers.
 
 Each node has:
@@ -275,16 +278,7 @@ Each node has:
 
 ## How It All Fits Together
 
-```
-You (config files)
-       ↓
-  Control Plane  ←→  etcd (cluster database)
-       ↓
-  Worker Node 1   Worker Node 2   Worker Node 3
-  [ Pod ][ Pod ]  [ Pod ][ Pod ]  [ Pod ][ Pod ]
-```
-
-You describe what you want. The control plane distributes work across nodes. Nodes run the actual containers.
+![w:85%](assets/overview-components-of-kubernetes.svg)
 
 ---
 
@@ -298,18 +292,13 @@ You describe what you want. The control plane distributes work across nodes. Nod
 
 ## What is a Namespace?
 
-A namespace is a way to divide one cluster into **logical groups**.
+![bg right:50% contain](assets/namespace.webp)
 
-- Everything in Kubernetes lives inside a namespace
-- Different teams or environments can share one cluster without interfering
+A way to divide one cluster into **logical groups**.
 
-Common namespaces:
-
-| Namespace | Purpose |
-|-----------|---------|
-| default | Where you land if you don't specify |
-| kube-system | Internal Kubernetes components |
-| dev / staging / prod | Your own environments |
+- Teams and environments share one cluster safely
+- Apply different limits and permissions per namespace
+- Common: `default`, `kube-system`, `dev`, `prod`
 
 ---
 
@@ -336,6 +325,8 @@ With namespaces you can:
 ---
 
 ## What is a Pod?
+
+![bg right:40% contain](assets/what-is-a-pod.webp)
 
 A **Pod** is the smallest thing Kubernetes manages.
 
@@ -438,16 +429,9 @@ When you push a new version of your app:
 
 ## Deployment → ReplicaSet → Pod
 
-```
-Deployment
-  └── ReplicaSet (current version)
-        ├── Pod
-        ├── Pod
-        └── Pod
-  └── ReplicaSet (previous version, kept for rollback)
-```
+![w:800px](assets/replicaset-deployment-pod.png)
 
-Kubernetes keeps old ReplicaSets around so you can roll back instantly if needed.
+Old ReplicaSets are kept for instant rollback.
 
 ---
 
@@ -493,33 +477,37 @@ A **Service** sits in front of a group of Pods and gives them a stable name and 
 
 ## ClusterIP
 
+![bg right:50% contain](assets/clusterip.webp)
+
 The default Service type.
 
-- Creates a stable internal address (e.g. `my-app.default.svc.cluster.local`)
-- Only reachable by other apps inside the cluster
-- Perfect for internal microservices that should not be exposed publicly
+- Stable internal address only
+- Not reachable from outside the cluster
+- Ideal for internal microservices
 
 ---
 
 ## NodePort
 
+![bg right:50% contain](assets/nodeport.webp)
+
 Opens a port on every worker node.
 
-- External traffic hits any node on that port → forwarded to the right Pods
-- Port is in the range 30000–32767
-- Simple to set up, but not elegant for production
-- Good for quick testing or on-premise setups without a cloud load balancer
+- Port range: 30000–32767
+- Good for dev/testing or on-premise
+- Not recommended for production
 
 ---
 
 ## LoadBalancer
 
-Requests a real load balancer from your cloud provider.
+![bg right:50% contain](assets/loadbalancer.webp)
 
-- Works on AWS, GCP, Azure, and others
-- Gets a public IP address automatically
-- Traffic flows: Internet → Load Balancer → Service → Pods
-- The recommended choice for production apps that need to be publicly accessible
+Provisions a cloud load balancer with a public IP.
+
+- Works on AWS, GCP, Azure
+- Internet → Load Balancer → Pods
+- Recommended for production public traffic
 
 ---
 
@@ -621,16 +609,7 @@ An **Ingress** is a single entry point that routes incoming HTTP/HTTPS traffic t
 
 ## How Ingress Works
 
-```
-Internet
-   ↓
-Ingress (one public IP)
-   ├── api.example.com  →  api-service  →  Pods
-   ├── app.example.com  →  web-service  →  Pods
-   └── app.example.com/admin  →  admin-service  →  Pods
-```
-
-All traffic enters through one point. The Ingress controller reads the rules and forwards accordingly.
+![w:800px](assets/ingress.jpg)
 
 ---
 
@@ -718,15 +697,9 @@ Kubernetes finds a matching PersistentVolume (or creates one via StorageClass) a
 
 ## How It All Connects
 
-```
-Pod
- └── uses PersistentVolumeClaim
-       └── bound to PersistentVolume
-             └── backed by real storage
-                  (AWS EBS / GCP Disk / NFS / local SSD)
-```
+![w:800px](assets/persistence-volume.png)
 
-When the Pod restarts or moves to another node, it reattaches to the same PersistentVolume and finds the data intact.
+Pod restarts reattach to the same PV — data stays intact.
 
 ---
 

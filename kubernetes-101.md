@@ -191,18 +191,6 @@ Imagine you run a web app on a single server.
 
 ---
 
-## Kubernetes in Plain English
-
-![bg right:45% contain](assets/kubernetes-vs-docker.png)
-
-Kubernetes (**k8s**) manages where and how your containers run across many machines.
-
-- You describe **what** you want
-- Kubernetes figures out **how** to make it happen
-- It keeps watching and self-heals
-
----
-
 ## A Quick Analogy
 
 Think of Kubernetes like a **restaurant manager**:
